@@ -17,12 +17,47 @@ class VerticalTextLine extends StatefulWidget {
 class _VerticalTextLineState extends State<VerticalTextLine> {
   List<String> _characters = ['T', 'E', 'S', 'T'];
 
+  late int _maxLength;
+
+  @override
+  void initState() {
+    _maxLength = widget.maxLength;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: _getCharacters(),
+    List<Color> colors = [Colors.transparent, Colors.green, Colors.green, Colors.white];
+    double greenStart;
+    double whiteStart;
+
+    whiteStart = (_characters.length - 1) / (_characters.length);
+    if (((_characters.length - _maxLength) / _characters.length) < 0.3) {
+      greenStart = 0.3;
+    }
+    else {
+      greenStart = (_characters.length - _maxLength) / _characters.length;
+    }
+    List<double> stops = [0, greenStart, whiteStart, whiteStart];
+    return _getShaderMask(stops, colors);
+  }
+
+  ShaderMask _getShaderMask(List<double> stops, List<Color> colors) {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: stops,
+          colors: colors,
+        ).createShader(bounds);
+      },
+      blendMode: BlendMode.srcIn,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: _getCharacters(),
+      ),
     );
   }
 
