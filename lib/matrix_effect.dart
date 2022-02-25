@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:coderain/vertical_text_line.dart';
 import 'package:flutter/material.dart';
 
@@ -9,16 +12,47 @@ class MatrixEffect extends StatefulWidget {
 }
 
 class _MatrixEffectState extends State<MatrixEffect> {
+  List<Widget> _verticalLines = [];
+  late Timer timer;
+
+  @override
+  void initState() {
+    _startTimer();
+    super.initState();
+  }
+
+  void _startTimer() {
+    timer = Timer.periodic(Duration(milliseconds: 300), (timer) {
+      setState(() {
+        _verticalLines.add(
+            _getVerticalTextLine(context)
+        );
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _getVerticalTextLine(context);
+    return Stack(
+        children: _verticalLines
+    );
   }
 
   Widget _getVerticalTextLine(BuildContext context) {
-    return Container(
-      alignment: Alignment.topCenter,
-      margin: const EdgeInsets.only(top: 50),
-      child: VerticalTextLine(),
+    Key key = GlobalKey();
+    return Positioned(
+      key: key,
+      left: Random().nextDouble() * MediaQuery.of(context).size.width,
+      child: VerticalTextLine(
+          speed: 1 + Random().nextDouble() * 9,
+          maxLength: Random().nextInt(10) + 5
+      ),
     );
   }
 }
