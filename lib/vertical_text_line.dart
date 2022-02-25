@@ -52,8 +52,9 @@ class _VerticalTextLineState extends State<VerticalTextLine> {
   void _startTimer() {
     timer = Timer.periodic(_stepInterval, (timer) {
       final _random = new Random();
-      final list = ['A', 'B', 'C'];
-      String element = list[_random.nextInt(list.length)];
+      String element = String.fromCharCode(
+          _random.nextInt(512)
+      );
 
       setState(() {
         _characters.add(element);
