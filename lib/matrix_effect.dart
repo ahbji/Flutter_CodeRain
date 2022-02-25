@@ -50,6 +50,13 @@ class _MatrixEffectState extends State<MatrixEffect> {
       key: key,
       left: Random().nextDouble() * MediaQuery.of(context).size.width,
       child: VerticalTextLine(
+          onFinished: () {
+            setState(() {
+              _verticalLines.removeWhere((element) {
+                return element.key == key;
+              });
+            });
+          },
           speed: 1 + Random().nextDouble() * 9,
           maxLength: Random().nextInt(10) + 5
       ),

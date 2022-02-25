@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class VerticalTextLine extends StatefulWidget {
   const VerticalTextLine({
+    required this.onFinished,
     this.speed = 12.0,
     this.maxLength = 10,
     Key? key,
@@ -12,6 +13,7 @@ class VerticalTextLine extends StatefulWidget {
 
   final double speed;
   final int maxLength;
+  final VoidCallback onFinished;
 
   @override
   _VerticalTextLineState createState() => _VerticalTextLineState();
@@ -51,10 +53,16 @@ class _VerticalTextLineState extends State<VerticalTextLine> {
 
   void _startTimer() {
     timer = Timer.periodic(_stepInterval, (timer) {
-      final _random = new Random();
+      final _random = Random();
       String element = String.fromCharCode(
           _random.nextInt(512)
       );
+
+      final box = context.findRenderObject() as RenderBox;
+      if (box.size.height > MediaQuery.of(context).size.height * 2) {
+        widget.onFinished();
+        return;
+      }
 
       setState(() {
         _characters.add(element);
@@ -92,5 +100,11 @@ class _VerticalTextLineState extends State<VerticalTextLine> {
       );
     }
     return textWidgets;
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 }
