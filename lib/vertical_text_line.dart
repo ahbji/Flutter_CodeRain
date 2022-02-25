@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class VerticalTextLine extends StatefulWidget {
@@ -15,13 +18,17 @@ class VerticalTextLine extends StatefulWidget {
 }
 
 class _VerticalTextLineState extends State<VerticalTextLine> {
-  List<String> _characters = ['T', 'E', 'S', 'T'];
+  List<String> _characters = [];
 
   late int _maxLength;
+  late Duration _stepInterval;
+  late Timer timer;
 
   @override
   void initState() {
     _maxLength = widget.maxLength;
+    _stepInterval = Duration(milliseconds: (1000 ~/ widget.speed));
+    _startTimer();
     super.initState();
   }
 
@@ -40,6 +47,18 @@ class _VerticalTextLineState extends State<VerticalTextLine> {
     }
     List<double> stops = [0, greenStart, whiteStart, whiteStart];
     return _getShaderMask(stops, colors);
+  }
+
+  void _startTimer() {
+    timer = Timer.periodic(_stepInterval, (timer) {
+      final _random = new Random();
+      final list = ['A', 'B', 'C'];
+      String element = list[_random.nextInt(list.length)];
+
+      setState(() {
+        _characters.add(element);
+      });
+    });
   }
 
   ShaderMask _getShaderMask(List<double> stops, List<Color> colors) {
