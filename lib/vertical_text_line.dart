@@ -20,7 +20,7 @@ class VerticalTextLine extends StatefulWidget {
 }
 
 class _VerticalTextLineState extends State<VerticalTextLine> {
-  List<String> _characters = [];
+  final List<String> _characters = [];
 
   late int _maxLength;
   late Duration _stepInterval;
@@ -95,7 +95,7 @@ class _VerticalTextLineState extends State<VerticalTextLine> {
       textWidgets.add(
         Text(
           character,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       );
     }

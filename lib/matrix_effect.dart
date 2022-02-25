@@ -12,7 +12,7 @@ class MatrixEffect extends StatefulWidget {
 }
 
 class _MatrixEffectState extends State<MatrixEffect> {
-  List<Widget> _verticalLines = [];
+  final List<Widget> _verticalLines = [];
   late Timer timer;
 
   @override
@@ -22,7 +22,7 @@ class _MatrixEffectState extends State<MatrixEffect> {
   }
 
   void _startTimer() {
-    timer = Timer.periodic(Duration(milliseconds: 300), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       setState(() {
         _verticalLines.add(
             _getVerticalTextLine(context)
