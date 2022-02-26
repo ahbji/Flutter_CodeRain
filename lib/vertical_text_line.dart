@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'LifecycleState.dart';
+
 class VerticalTextLine extends StatefulWidget {
   const VerticalTextLine({
     required this.onFinished,
@@ -19,12 +21,22 @@ class VerticalTextLine extends StatefulWidget {
   _VerticalTextLineState createState() => _VerticalTextLineState();
 }
 
-class _VerticalTextLineState extends State<VerticalTextLine> {
+class _VerticalTextLineState extends LifecycleState<VerticalTextLine> {
   final List<String> _characters = [];
 
   late int _maxLength;
   late Duration _stepInterval;
   late Timer timer;
+
+  @override
+  void setLifecycleStateHandler() {
+    lifecycleStateHandler = LifecycleStateHandler(
+      onResumed: () => _startTimer(),
+      onPaused: () => _cancelTimer(),
+      onInactive: () => _cancelTimer(),
+      onDetached: () => _cancelTimer(),
+    );
+  }
 
   @override
   void initState() {
@@ -68,6 +80,10 @@ class _VerticalTextLineState extends State<VerticalTextLine> {
         _characters.add(element);
       });
     });
+  }
+
+  void _cancelTimer() {
+    timer.cancel();
   }
 
   ShaderMask _getShaderMask(List<double> stops, List<Color> colors) {

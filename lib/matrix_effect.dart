@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:coderain/LifecycleState.dart';
 import 'package:coderain/vertical_text_line.dart';
 import 'package:flutter/material.dart';
 
@@ -11,9 +12,19 @@ class MatrixEffect extends StatefulWidget {
   _MatrixEffectState createState() => _MatrixEffectState();
 }
 
-class _MatrixEffectState extends State<MatrixEffect> {
+class _MatrixEffectState extends LifecycleState<MatrixEffect> {
   final List<Widget> _verticalLines = [];
   late Timer timer;
+
+  @override
+  void setLifecycleStateHandler() {
+    lifecycleStateHandler = LifecycleStateHandler(
+      onResumed: () => _startTimer(),
+      onPaused: () => _cancelTimer(),
+      onInactive: () => _cancelTimer(),
+      onDetached: () => _cancelTimer(),
+    );
+  }
 
   @override
   void initState() {
@@ -29,6 +40,10 @@ class _MatrixEffectState extends State<MatrixEffect> {
         );
       });
     });
+  }
+
+  void _cancelTimer() {
+    timer.cancel();
   }
 
   @override
